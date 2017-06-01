@@ -1,6 +1,6 @@
 {
   "name": "react-native-geojson",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "add a geojson overlay to react-native-maps",
   "main": "index.js",
   "scripts": {
