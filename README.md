@@ -24,7 +24,7 @@ const alcatraz = {
   ]
 };
 
-const map = props => (
+const Map = props => (
   <MapView>
     <Geojson geojson={alcatraz} />
   </MapView>
