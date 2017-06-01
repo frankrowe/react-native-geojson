@@ -7,6 +7,7 @@ A fast way to add geojson to react-native-maps.
 
 ### Example:
 ```js
+import React from 'react';
 import MapView from 'react-native-maps';
 import Geojson from 'react-native-geojson';
 
