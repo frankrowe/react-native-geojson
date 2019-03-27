@@ -77,7 +77,7 @@ const makeCoordinates = feature => {
 const Geojson = props => {
   const overlays = makeOverlays(props.geojson.features);
   return (
-    <View>
+    <React.Fragment key={props.geojson.id || uuid()}>
       {overlays.map(overlay => {
         if (overlay.type === 'point') {
           return (
@@ -111,7 +111,7 @@ const Geojson = props => {
           );
         }
       })}
-    </View>
+    </React.Fragment>
   );
 };
 
