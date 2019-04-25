@@ -1,9 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import MapView from 'react-native-maps';
 import uuid from 'uuid';
 
-export const makeOverlays = features => {
+const makeOverlays = features => {
   const points = features
     .filter(f => f.geometry && (f.geometry.type === 'Point' || f.geometry.type === 'MultiPoint'))
     .map(feature => makeCoordinates(feature).map(coordinates => makeOverlay(coordinates, feature)))
@@ -55,23 +55,36 @@ const makePoint = c => ({ latitude: c[1], longitude: c[0] });
 
 const makeLine = l => l.map(makePoint);
 
-const makeCoordinates = feature => {
+const makeCoordinates = (feature) => {
   const g = feature.geometry;
-  if (g.type === 'Point') {
-    return [makePoint(g.coordinates)];
-  } else if (g.type === 'MultiPoint') {
-    return g.coordinates.map(makePoint);
-  } else if (g.type === 'LineString') {
-    return [makeLine(g.coordinates)];
-  } else if (g.type === 'MultiLineString') {
-    return g.coordinates.map(makeLine);
-  } else if (g.type === 'Polygon') {
-    return g.coordinates.map(makeLine);
-  } else if (g.type === 'MultiPolygon') {
-    return g.coordinates.map(p => p.map(makeLine));
-  } else {
-    return [];
+  let coordinates;
+
+  switch (g.type) {
+    case 'Point':
+      coordinates = [makePoint(g.coordinates)];
+      break;
+    case 'MultiPoint':
+      coordinates = g.coordinates.map(makePoint);
+      break;
+    case 'LineString':
+      coordinates = [makeLine(g.coordinates)];
+      break;
+    case 'MultiLineString':
+    case 'Polygon':
+      coordinates = g.coordinates.map(makeLine);
+      break;
+    case 'Polygon':
+      coordinates = [makePoint(g.coordinates)];
+      break;
+    case 'MultiPolygon':
+      coordinates = g.coordinates.map(p => p.map(makeLine));
+      break;
+    default:
+      coordinates = [];
+      break;
   }
+
+  return coordinates;
 };
 
 const Geojson = props => {
@@ -84,7 +97,7 @@ const Geojson = props => {
             <MapView.Marker
               key={overlay.id}
               coordinate={overlay.coordinates}
-              pinColor={props.color}
+              pinColor={props.pinColor}
             />
           );
         }
@@ -115,4 +128,4 @@ const Geojson = props => {
   );
 };
 
-export default Geojson;
+export { Geojson as default, makeOverlays };
