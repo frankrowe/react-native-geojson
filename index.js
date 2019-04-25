@@ -55,7 +55,7 @@ const makePoint = c => ({ latitude: c[1], longitude: c[0] });
 
 const makeLine = l => l.map(makePoint);
 
-const makeCoordinates = (feature) => {
+const makeCoordinates = feature => {
   const g = feature.geometry;
   let coordinates;
 
