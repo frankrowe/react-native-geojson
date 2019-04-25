@@ -1,7 +1,7 @@
 declare module "react-native-geojson" {
   import React, { Component } from "react";
 
-  import { FeatureCollection } from "geojson";
+  import { FeatureCollection, Feature } from "geojson";
 
   // =======================================================================
   //  Geojson (default export)
@@ -21,5 +21,5 @@ declare module "react-native-geojson" {
   //  makeOverlays
   // =======================================================================
 
-  export function makeOverlays(features: any): any;
+  export function makeOverlays(features: Feature[]): any;
 }
