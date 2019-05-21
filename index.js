@@ -1,26 +1,44 @@
 import React from 'react';
-import { View } from 'react-native';
 import MapView from 'react-native-maps';
 import uuid from 'uuid';
 
 const makeOverlays = features => {
   const points = features
-    .filter(f => f.geometry && (f.geometry.type === 'Point' || f.geometry.type === 'MultiPoint'))
-    .map(feature => makeCoordinates(feature).map(coordinates => makeOverlay(coordinates, feature)))
+    .filter(
+      f =>
+        f.geometry &&
+        (f.geometry.type === 'Point' || f.geometry.type === 'MultiPoint')
+    )
+    .map(feature =>
+      makeCoordinates(feature).map(coordinates =>
+        makeOverlay(coordinates, feature)
+      )
+    )
     .reduce(flatten, [])
     .map(overlay => ({ ...overlay, type: 'point' }));
 
   const lines = features
     .filter(
-      f => f.geometry && (f.geometry.type === 'LineString' || f.geometry.type === 'MultiLineString')
+      f =>
+        f.geometry &&
+        (f.geometry.type === 'LineString' ||
+          f.geometry.type === 'MultiLineString')
     )
-    .map(feature => makeCoordinates(feature).map(coordinates => makeOverlay(coordinates, feature)))
+    .map(feature =>
+      makeCoordinates(feature).map(coordinates =>
+        makeOverlay(coordinates, feature)
+      )
+    )
     .reduce(flatten, [])
     .map(overlay => ({ ...overlay, type: 'polyline' }));
 
   const multipolygons = features
     .filter(f => f.geometry && f.geometry.type === 'MultiPolygon')
-    .map(feature => makeCoordinates(feature).map(coordinates => makeOverlay(coordinates, feature)))
+    .map(feature =>
+      makeCoordinates(feature).map(coordinates =>
+        makeOverlay(coordinates, feature)
+      )
+    )
     .reduce(flatten, []);
 
   const polygons = features
@@ -38,9 +56,12 @@ const flatten = (prev, curr) => prev.concat(curr);
 const makeOverlay = (coordinates, feature) => {
   let overlay = {
     feature,
-    id: feature.id ? feature.id : uuid(),
+    id: feature.id ? feature.id : uuid()
   };
-  if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
+  if (
+    feature.geometry.type === 'Polygon' ||
+    feature.geometry.type === 'MultiPolygon'
+  ) {
     overlay.coordinates = coordinates[0];
     if (coordinates.length > 1) {
       overlay.holes = coordinates.slice(1);
@@ -90,7 +111,7 @@ const makeCoordinates = feature => {
 const Geojson = props => {
   const overlays = makeOverlays(props.geojson.features);
   return (
-    <View>
+    <>
       {overlays.map(overlay => {
         if (overlay.type === 'point') {
           return (
@@ -124,7 +145,7 @@ const Geojson = props => {
           );
         }
       })}
-    </View>
+    </>
   );
 };
 
